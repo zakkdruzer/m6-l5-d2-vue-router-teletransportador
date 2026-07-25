@@ -3,9 +3,11 @@ import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { bebidas } from '../datos.js'
 
+// Inicializamos router y route (esta es la línea que faltaba y causaba el error)
 const router = useRouter()
 const route = useRoute()
 
+// PODER 3: El Radar (lista filtrada desde la URL)
 const bebidasFiltradas = computed(() => {
   const busqueda = route.query.buscar?.toLowerCase() || ''
   if (!busqueda) return bebidas
@@ -24,17 +26,15 @@ const actualizarBusqueda = (event) => {
   })
 }
 
+// PODER 1: Teletransporte
 const verDetalle = (id) => {
   router.push('/item/' + id)
 }
 
 // PODER 5: El Dado de la Suerte
 const sorprendeme = () => {
-  // Elegimos un índice al azar de nuestro catálogo
   const indiceAzar = Math.floor(Math.random() * bebidas.length)
   const idAzar = bebidas[indiceAzar].id
-  
-  // Navegamos usando name y params (elegante)
   router.push({ name: 'item', params: { id: idAzar } })
 }
 </script>
@@ -50,11 +50,18 @@ const sorprendeme = () => {
         :value="route.query.buscar"
         @input="actualizarBusqueda"
       >
-      <!-- Botón Sorpréndeme agregado aquí -->
       <button class="btn-sorpresa" @click="sorprendeme">🎲 Sorpréndeme</button>
     </div>
     
-    <div class="grid-lista">
+    <!-- ESTADO VACÍO: Cuando no hay resultados -->
+    <div v-if="bebidasFiltradas.length === 0" class="estado-vacio">
+      <h3>No encontramos nada 🕵️‍♂️</h3>
+      <p>No hay ninguna bebida que coincida con tu búsqueda.</p>
+      <button @click="router.push('/coleccion')">Limpiar búsqueda</button>
+    </div>
+
+    <!-- LISTA NORMAL -->
+    <div v-else class="grid-lista">
       <div v-for="bebida in bebidasFiltradas" :key="bebida.id" class="tarjeta">
         <div class="emoji-grande">{{ bebida.emoji }}</div>
         <h3>{{ bebida.nombre }}</h3>
