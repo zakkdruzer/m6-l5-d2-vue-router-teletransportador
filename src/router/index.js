@@ -1,9 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import ColeccionView from '../views/ColeccionView.vue'
 import ItemView from '../views/ItemView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // Cambiamos el modo de historia a Hash
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/',
