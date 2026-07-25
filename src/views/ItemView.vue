@@ -1,20 +1,24 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { bebidas } from '../datos.js'
 
-// Inicializamos la ruta actual
 const route = useRoute()
+const router = useRouter() // Agregamos useRouter para poder navegar
 
-// PODER 2: Leemos el parámetro de la URL y lo convertimos a número inmediatamente
 const idRuta = Number(route.params.id)
-
-// Buscamos el elemento exacto
 const bebidaSeleccionada = bebidas.find(item => item.id === idRuta)
+
+// PODER 4: El Regreso usando el historial[cite: 1]
+const volver = () => {
+  router.back()
+}
 </script>
 
 <template>
-  <!-- Renderizado condicional básico por si el ID no existe -->
   <div class="ficha-item" v-if="bebidaSeleccionada">
+    <!-- Botón de regreso agregado aquí -->
+    <button class="btn-volver" @click="volver">- Volver</button>
+    
     <div class="encabezado-ficha">
       <span class="emoji-gigante">{{ bebidaSeleccionada.emoji }}</span>
       <h2>{{ bebidaSeleccionada.nombre }}</h2>
@@ -31,5 +35,6 @@ const bebidaSeleccionada = bebidas.find(item => item.id === idRuta)
   <div v-else class="error-mensaje">
     <h2>Elemento no encontrado</h2>
     <p>El ID ingresado no corresponde a ninguna receta activa.</p>
+    <button class="btn-volver" @click="volver">- Volver</button>
   </div>
 </template>
