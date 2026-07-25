@@ -6,7 +6,6 @@ import { bebidas } from '../datos.js'
 const router = useRouter()
 const route = useRoute()
 
-// PODER 3: La lista se deriva de la URL con un computed
 const bebidasFiltradas = computed(() => {
   const busqueda = route.query.buscar?.toLowerCase() || ''
   if (!busqueda) return bebidas
@@ -17,17 +16,26 @@ const bebidasFiltradas = computed(() => {
   )
 })
 
-// Función para actualizar la URL cuando el usuario escribe
 const actualizarBusqueda = (event) => {
   const valor = event.target.value
   router.push({ 
     path: '/coleccion', 
-    query: valor ? { buscar: valor } : {} // Si está vacío, quitamos el query
+    query: valor ? { buscar: valor } : {} 
   })
 }
 
 const verDetalle = (id) => {
   router.push('/item/' + id)
+}
+
+// PODER 5: El Dado de la Suerte
+const sorprendeme = () => {
+  // Elegimos un índice al azar de nuestro catálogo
+  const indiceAzar = Math.floor(Math.random() * bebidas.length)
+  const idAzar = bebidas[indiceAzar].id
+  
+  // Navegamos usando name y params (elegante)
+  router.push({ name: 'item', params: { id: idAzar } })
 }
 </script>
 
@@ -35,18 +43,18 @@ const verDetalle = (id) => {
   <div class="coleccion">
     <h2>Catálogo de Producción</h2>
     
-    <!-- Buscador conectado a la URL -->
-    <div class="buscador">
+    <div class="controles">
       <input 
         type="text" 
         placeholder="Buscar por nombre o categoría..." 
         :value="route.query.buscar"
         @input="actualizarBusqueda"
       >
+      <!-- Botón Sorpréndeme agregado aquí -->
+      <button class="btn-sorpresa" @click="sorprendeme">🎲 Sorpréndeme</button>
     </div>
     
     <div class="grid-lista">
-      <!-- Ahora iteramos sobre bebidasFiltradas en lugar de bebidas -->
       <div v-for="bebida in bebidasFiltradas" :key="bebida.id" class="tarjeta">
         <div class="emoji-grande">{{ bebida.emoji }}</div>
         <h3>{{ bebida.nombre }}</h3>

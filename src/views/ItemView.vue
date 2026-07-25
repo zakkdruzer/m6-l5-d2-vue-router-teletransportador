@@ -1,24 +1,49 @@
 <script setup>
+// Importamos ref y watch desde vue
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { bebidas } from '../datos.js'
 
 const route = useRoute()
-const router = useRouter() // Agregamos useRouter para poder navegar
+const router = useRouter() 
 
-const idRuta = Number(route.params.id)
-const bebidaSeleccionada = bebidas.find(item => item.id === idRuta)
+// Ahora usamos ref para que la vista reaccione a los cambios
+const idActual = ref(Number(route.params.id))
+const bebidaSeleccionada = ref(bebidas.find(item => item.id === idActual.value))
 
-// PODER 4: El Regreso usando el historial[cite: 1]
 const volver = () => {
   router.back()
 }
+
+// Navegación a vecinos
+const irAnterior = () => {
+  router.push({ name: 'item', params: { id: idActual.value - 1 } })
+}
+
+const irSiguiente = () => {
+  router.push({ name: 'item', params: { id: idActual.value + 1 } })
+}
+
+// JEFE FINAL: El Bug del Clon
+// Observamos el id en la URL. Si cambia, actualizamos los datos sin recargar el componente.
+watch(
+  () => route.params.id,
+  (nuevoId) => {
+    // Verificamos que nuevoId exista (para evitar errores si volvemos a la colección)
+    if (nuevoId) {
+      idActual.value = Number(nuevoId)
+      bebidaSeleccionada.value = bebidas.find(item => item.id === idActual.value)
+    }
+  }
+)
 </script>
 
 <template>
   <div class="ficha-item" v-if="bebidaSeleccionada">
-    <!-- Botón de regreso agregado aquí -->
     <button class="btn-volver" @click="volver">- Volver</button>
-    
+    <!-- Nuevo botón opcional para ir directo al inicio -->
+    <button class="btn-inicio" @click="router.push('/coleccion')">🏠 Catálogo Completo</button>
+
     <div class="encabezado-ficha">
       <span class="emoji-gigante">{{ bebidaSeleccionada.emoji }}</span>
       <h2>{{ bebidaSeleccionada.nombre }}</h2>
@@ -29,6 +54,12 @@ const volver = () => {
       <p><strong>Categoría:</strong> {{ bebidaSeleccionada.categoria }}</p>
       <p><strong>Tamaño de Lote:</strong> {{ bebidaSeleccionada.lote }} L</p>
       <p><strong>Brix Inicial:</strong> {{ bebidaSeleccionada.brix }}</p>
+    </div>
+
+    <!-- Controles de navegación del Jefe Final -->
+    <div class="controles-vecinos">
+      <button @click="irAnterior">⬅️ Anterior</button>
+      <button @click="irSiguiente">Siguiente ➡️</button>
     </div>
   </div>
   
