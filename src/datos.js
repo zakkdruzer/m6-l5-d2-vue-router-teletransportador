@@ -1,6 +1,6 @@
 export const bebidas = [
   { id: 1, nombre: 'Hidromiel Clásica', emoji: '🍯', categoria: 'Hidromiel', lote: 17, brix: 22 },
-  { id: 2, nombre: 'Ginger Ale Seco', emoji: '🫚', categoria: 'Jengibre', lote: 8, brix: 12 },
+  { id: 2, nombre: 'Ginger Ale Seco', emoji: '🥃', categoria: 'Jengibre', lote: 8, brix: 12 },
   { id: 3, nombre: 'Melomel de Frutos Rojos', emoji: '🍓', categoria: 'Hidromiel', lote: 17, brix: 24 },
   { id: 4, nombre: 'Ginger Beer Fuerte', emoji: '🍺', categoria: 'Jengibre', lote: 20, brix: 15 },
   { id: 5, nombre: 'Bochet (Miel Caramelizada)', emoji: '🔥', categoria: 'Hidromiel', lote: 10, brix: 26 },
